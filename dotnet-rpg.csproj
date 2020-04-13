@@ -5,5 +5,9 @@
     <RootNamespace>dotnet_rpg</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
+  </ItemGroup>
+
 
 </Project>

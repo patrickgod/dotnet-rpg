@@ -32,5 +32,10 @@ namespace dotnet_rpg.Controllers
         {
             return Ok(await _fightService.Fight(request));
         }
+
+        public async Task<IActionResult> GetHighscore()
+        {
+            return Ok(await _fightService.GetHighscore());
+        }
     }
 }

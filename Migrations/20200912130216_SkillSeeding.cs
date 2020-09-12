@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace dotnet_rpg.Migrations
 {
-    public partial class Initial : Migration
+    public partial class SkillSeeding : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -49,7 +49,7 @@ namespace dotnet_rpg.Migrations
                     Defense = table.Column<int>(nullable: false),
                     Intelligence = table.Column<int>(nullable: false),
                     Class = table.Column<int>(nullable: false),
-                    UserId = table.Column<int>(nullable: true),
+                    UserId = table.Column<int>(nullable: false),
                     Fights = table.Column<int>(nullable: false),
                     Victories = table.Column<int>(nullable: false),
                     Defeats = table.Column<int>(nullable: false)
@@ -62,7 +62,7 @@ namespace dotnet_rpg.Migrations
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -109,6 +109,21 @@ namespace dotnet_rpg.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.InsertData(
+                table: "Skills",
+                columns: new[] { "Id", "Damage", "Name" },
+                values: new object[] { 1, 30, "Fireball" });
+
+            migrationBuilder.InsertData(
+                table: "Skills",
+                columns: new[] { "Id", "Damage", "Name" },
+                values: new object[] { 2, 20, "Frenzy" });
+
+            migrationBuilder.InsertData(
+                table: "Skills",
+                columns: new[] { "Id", "Damage", "Name" },
+                values: new object[] { 3, 50, "Blizzard" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Characters_UserId",

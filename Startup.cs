@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using AutoMapper;
 using dotnet_rpg.Data;
 using dotnet_rpg.Services.CharacterService;
-using dotnet_rpg.Services.CharacterSkillService;
 using dotnet_rpg.Services.FightService;
 using dotnet_rpg.Services.WeaponService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -36,7 +35,11 @@ namespace dotnet_rpg
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<DataContext>(x => x.UseSqlite(Configuration.GetConnectionString("SqliteConnection")));
+            services.AddDbContext<DataContext>(options
+                => options
+                    .EnableSensitiveDataLogging()
+                    .UseSqlite(Configuration.GetConnectionString("SqliteConnection"))
+            );
             services.AddControllers();
             services.AddAutoMapper(typeof(Startup));
             services.AddScoped<ICharacterService, CharacterService>();
@@ -55,7 +58,6 @@ namespace dotnet_rpg
             });
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IWeaponService, WeaponService>();
-            services.AddScoped<ICharacterSkillService, CharacterSkillService>();
             services.AddScoped<IFightService, FightService>();
         }
 

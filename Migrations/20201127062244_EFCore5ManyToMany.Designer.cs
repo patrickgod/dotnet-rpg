@@ -9,14 +9,46 @@ using dotnet_rpg.Data;
 namespace dotnet_rpg.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20200912131308_FinalSeeding")]
-    partial class FinalSeeding
+    [Migration("20201127062244_EFCore5ManyToMany")]
+    partial class EFCore5ManyToMany
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.8");
+                .HasAnnotation("ProductVersion", "5.0.0");
+
+            modelBuilder.Entity("CharacterSkill", b =>
+                {
+                    b.Property<int>("CharactersId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("SkillsId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("CharactersId", "SkillsId");
+
+                    b.HasIndex("SkillsId");
+
+                    b.ToTable("CharacterSkill");
+
+                    b.HasData(
+                        new
+                        {
+                            CharactersId = 1,
+                            SkillsId = 2
+                        },
+                        new
+                        {
+                            CharactersId = 2,
+                            SkillsId = 1
+                        },
+                        new
+                        {
+                            CharactersId = 2,
+                            SkillsId = 3
+                        });
+                });
 
             modelBuilder.Entity("dotnet_rpg.Models.Character", b =>
                 {
@@ -91,38 +123,6 @@ namespace dotnet_rpg.Migrations
                         });
                 });
 
-            modelBuilder.Entity("dotnet_rpg.Models.CharacterSkill", b =>
-                {
-                    b.Property<int>("CharacterId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("SkillId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("CharacterId", "SkillId");
-
-                    b.HasIndex("SkillId");
-
-                    b.ToTable("CharacterSkills");
-
-                    b.HasData(
-                        new
-                        {
-                            CharacterId = 1,
-                            SkillId = 2
-                        },
-                        new
-                        {
-                            CharacterId = 2,
-                            SkillId = 1
-                        },
-                        new
-                        {
-                            CharacterId = 2,
-                            SkillId = 3
-                        });
-                });
-
             modelBuilder.Entity("dotnet_rpg.Models.Skill", b =>
                 {
                     b.Property<int>("Id")
@@ -189,15 +189,15 @@ namespace dotnet_rpg.Migrations
                         new
                         {
                             Id = 1,
-                            PasswordHash = new byte[] { 76, 113, 67, 63, 173, 141, 47, 228, 23, 179, 116, 32, 48, 135, 183, 214, 102, 188, 82, 78, 163, 180, 235, 104, 189, 199, 123, 71, 213, 183, 38, 181, 114, 166, 95, 186, 249, 88, 36, 30, 254, 253, 162, 83, 138, 77, 89, 26, 212, 236, 138, 138, 10, 151, 48, 21, 112, 93, 37, 184, 38, 5, 206, 97 },
-                            PasswordSalt = new byte[] { 19, 224, 172, 96, 132, 205, 211, 46, 214, 76, 25, 51, 112, 164, 61, 244, 97, 107, 229, 30, 125, 10, 190, 220, 179, 64, 58, 146, 21, 156, 132, 246, 87, 243, 243, 245, 93, 209, 159, 150, 251, 178, 51, 121, 141, 159, 184, 153, 38, 242, 13, 144, 219, 182, 232, 102, 197, 169, 137, 164, 185, 15, 219, 107, 234, 117, 206, 162, 43, 82, 37, 86, 153, 180, 38, 120, 107, 197, 3, 69, 199, 203, 181, 227, 167, 55, 43, 125, 147, 203, 78, 113, 217, 144, 61, 210, 190, 125, 196, 37, 51, 63, 95, 22, 15, 245, 101, 203, 225, 98, 190, 50, 47, 43, 151, 19, 216, 31, 24, 216, 26, 234, 11, 21, 160, 35, 198, 167 },
+                            PasswordHash = new byte[] { 212, 119, 118, 182, 190, 246, 237, 132, 3, 79, 106, 235, 251, 70, 134, 11, 76, 236, 87, 93, 196, 139, 255, 118, 49, 126, 243, 1, 53, 201, 173, 127, 244, 98, 181, 59, 254, 102, 105, 78, 181, 71, 212, 191, 240, 52, 117, 194, 138, 34, 53, 99, 76, 243, 169, 43, 238, 226, 207, 65, 16, 129, 109, 122 },
+                            PasswordSalt = new byte[] { 39, 13, 100, 61, 173, 117, 172, 15, 92, 246, 105, 141, 103, 14, 40, 58, 196, 49, 101, 14, 177, 226, 141, 108, 220, 91, 41, 94, 130, 175, 142, 37, 57, 197, 1, 58, 74, 97, 64, 169, 162, 98, 91, 128, 131, 18, 106, 199, 130, 249, 44, 227, 29, 17, 218, 205, 29, 162, 1, 234, 38, 252, 41, 208, 18, 77, 229, 10, 192, 244, 26, 163, 130, 188, 187, 194, 66, 62, 223, 199, 1, 224, 235, 68, 159, 199, 236, 14, 184, 187, 24, 172, 52, 56, 2, 134, 181, 63, 134, 171, 217, 71, 252, 213, 6, 22, 235, 240, 16, 67, 23, 247, 13, 207, 132, 157, 204, 226, 137, 15, 4, 16, 90, 6, 20, 90, 196, 47 },
                             Username = "User1"
                         },
                         new
                         {
                             Id = 2,
-                            PasswordHash = new byte[] { 76, 113, 67, 63, 173, 141, 47, 228, 23, 179, 116, 32, 48, 135, 183, 214, 102, 188, 82, 78, 163, 180, 235, 104, 189, 199, 123, 71, 213, 183, 38, 181, 114, 166, 95, 186, 249, 88, 36, 30, 254, 253, 162, 83, 138, 77, 89, 26, 212, 236, 138, 138, 10, 151, 48, 21, 112, 93, 37, 184, 38, 5, 206, 97 },
-                            PasswordSalt = new byte[] { 19, 224, 172, 96, 132, 205, 211, 46, 214, 76, 25, 51, 112, 164, 61, 244, 97, 107, 229, 30, 125, 10, 190, 220, 179, 64, 58, 146, 21, 156, 132, 246, 87, 243, 243, 245, 93, 209, 159, 150, 251, 178, 51, 121, 141, 159, 184, 153, 38, 242, 13, 144, 219, 182, 232, 102, 197, 169, 137, 164, 185, 15, 219, 107, 234, 117, 206, 162, 43, 82, 37, 86, 153, 180, 38, 120, 107, 197, 3, 69, 199, 203, 181, 227, 167, 55, 43, 125, 147, 203, 78, 113, 217, 144, 61, 210, 190, 125, 196, 37, 51, 63, 95, 22, 15, 245, 101, 203, 225, 98, 190, 50, 47, 43, 151, 19, 216, 31, 24, 216, 26, 234, 11, 21, 160, 35, 198, 167 },
+                            PasswordHash = new byte[] { 212, 119, 118, 182, 190, 246, 237, 132, 3, 79, 106, 235, 251, 70, 134, 11, 76, 236, 87, 93, 196, 139, 255, 118, 49, 126, 243, 1, 53, 201, 173, 127, 244, 98, 181, 59, 254, 102, 105, 78, 181, 71, 212, 191, 240, 52, 117, 194, 138, 34, 53, 99, 76, 243, 169, 43, 238, 226, 207, 65, 16, 129, 109, 122 },
+                            PasswordSalt = new byte[] { 39, 13, 100, 61, 173, 117, 172, 15, 92, 246, 105, 141, 103, 14, 40, 58, 196, 49, 101, 14, 177, 226, 141, 108, 220, 91, 41, 94, 130, 175, 142, 37, 57, 197, 1, 58, 74, 97, 64, 169, 162, 98, 91, 128, 131, 18, 106, 199, 130, 249, 44, 227, 29, 17, 218, 205, 29, 162, 1, 234, 38, 252, 41, 208, 18, 77, 229, 10, 192, 244, 26, 163, 130, 188, 187, 194, 66, 62, 223, 199, 1, 224, 235, 68, 159, 199, 236, 14, 184, 187, 24, 172, 52, 56, 2, 134, 181, 63, 134, 171, 217, 71, 252, 213, 6, 22, 235, 240, 16, 67, 23, 247, 13, 207, 132, 157, 204, 226, 137, 15, 4, 16, 90, 6, 20, 90, 196, 47 },
                             Username = "User2"
                         });
                 });
@@ -241,6 +241,21 @@ namespace dotnet_rpg.Migrations
                         });
                 });
 
+            modelBuilder.Entity("CharacterSkill", b =>
+                {
+                    b.HasOne("dotnet_rpg.Models.Character", null)
+                        .WithMany()
+                        .HasForeignKey("CharactersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("dotnet_rpg.Models.Skill", null)
+                        .WithMany()
+                        .HasForeignKey("SkillsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("dotnet_rpg.Models.Character", b =>
                 {
                     b.HasOne("dotnet_rpg.Models.User", "User")
@@ -248,21 +263,8 @@ namespace dotnet_rpg.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
 
-            modelBuilder.Entity("dotnet_rpg.Models.CharacterSkill", b =>
-                {
-                    b.HasOne("dotnet_rpg.Models.Character", "Character")
-                        .WithMany("CharacterSkills")
-                        .HasForeignKey("CharacterId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("dotnet_rpg.Models.Skill", "Skill")
-                        .WithMany("CharacterSkills")
-                        .HasForeignKey("SkillId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("dotnet_rpg.Models.Weapon", b =>
@@ -272,6 +274,18 @@ namespace dotnet_rpg.Migrations
                         .HasForeignKey("dotnet_rpg.Models.Weapon", "CharacterId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Character");
+                });
+
+            modelBuilder.Entity("dotnet_rpg.Models.Character", b =>
+                {
+                    b.Navigation("Weapon");
+                });
+
+            modelBuilder.Entity("dotnet_rpg.Models.User", b =>
+                {
+                    b.Navigation("Characters");
                 });
 #pragma warning restore 612, 618
         }

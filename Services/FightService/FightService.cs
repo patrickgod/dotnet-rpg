@@ -69,21 +69,21 @@ namespace dotnet_rpg.Services.FightService
             try
             {
                 Character attacker = await _context.Characters
-                    .Include(c => c.CharacterSkills).ThenInclude(cs => cs.Skill)
+                    .Include(c => c.Skills)
                     .FirstOrDefaultAsync(c => c.Id == request.AttackerId);
                 Character opponent = await _context.Characters
                     .FirstOrDefaultAsync(c => c.Id == request.OpponentId);
 
-                CharacterSkill characterSkill =
-                    attacker.CharacterSkills.FirstOrDefault(cs => cs.Skill.Id == request.SkillId);
-                if (characterSkill == null)
+                Skill skill =
+                    attacker.Skills.FirstOrDefault(cs => cs.Id == request.SkillId);
+                if (skill == null)
                 {
                     response.Success = false;
                     response.Message = $"{attacker.Name} doesn't know that skill.";
                     return response;
                 }
 
-                int damage = DoSkillAttack(attacker, opponent, characterSkill);
+                int damage = DoSkillAttack(attacker, opponent, skill);
                 if (opponent.HitPoints <= 0)
                     response.Message = $"{opponent.Name} has been defeated!";
 
@@ -107,9 +107,9 @@ namespace dotnet_rpg.Services.FightService
             return response;
         }
 
-        private static int DoSkillAttack(Character attacker, Character opponent, CharacterSkill characterSkill)
+        private static int DoSkillAttack(Character attacker, Character opponent, Skill skill)
         {
-            int damage = characterSkill.Skill.Damage + (new Random().Next(attacker.Intelligence));
+            int damage = skill.Damage + (new Random().Next(attacker.Intelligence));
             damage -= new Random().Next(opponent.Defense);
             if (damage > 0)
                 opponent.HitPoints -= damage;
@@ -127,7 +127,7 @@ namespace dotnet_rpg.Services.FightService
                 List<Character> characters =
                     await _context.Characters
                     .Include(c => c.Weapon)
-                    .Include(c => c.CharacterSkills).ThenInclude(cs => cs.Skill)
+                    .Include(c => c.Skills)
                     .Where(c => request.CharacterIds.Contains(c.Id)).ToListAsync();
 
                 bool defeated = false;
@@ -149,9 +149,9 @@ namespace dotnet_rpg.Services.FightService
                         }
                         else
                         {
-                            int randomSkill = new Random().Next(attacker.CharacterSkills.Count);
-                            attackUsed = attacker.CharacterSkills[randomSkill].Skill.Name;
-                            damage = DoSkillAttack(attacker, opponent, attacker.CharacterSkills[randomSkill]);
+                            int randomSkill = new Random().Next(attacker.Skills.Count);
+                            attackUsed = attacker.Skills[randomSkill].Name;
+                            damage = DoSkillAttack(attacker, opponent, attacker.Skills[randomSkill]);
                         }
 
                         response.Data.Log.Add($"{attacker.Name} attacks {opponent.Name} using {attackUsed} with {(damage >= 0 ? damage : 0)} damage.");

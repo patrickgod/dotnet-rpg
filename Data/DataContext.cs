@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using dotnet_rpg.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,13 +11,9 @@ namespace dotnet_rpg.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Weapon> Weapons { get; set; }
         public DbSet<Skill> Skills { get; set; }
-        public DbSet<CharacterSkill> CharacterSkills { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<CharacterSkill>()
-                .HasKey(cs => new { cs.CharacterId, cs.SkillId });
-
             modelBuilder.Entity<User>()
                 .Property(user => user.Role).HasDefaultValue("Player");
 
@@ -34,7 +31,8 @@ namespace dotnet_rpg.Data
             );
 
             modelBuilder.Entity<Character>().HasData(
-                new Character {
+                new Character
+                {
                     Id = 1,
                     Name = "Frodo",
                     Class = RpgClass.Knight,
@@ -44,7 +42,8 @@ namespace dotnet_rpg.Data
                     Intelligence = 10,
                     UserId = 1
                 },
-                new Character {
+                new Character
+                {
                     Id = 2,
                     Name = "Raistlin",
                     Class = RpgClass.Mage,
@@ -61,11 +60,11 @@ namespace dotnet_rpg.Data
                 new Weapon { Id = 2, Name = "Crystal Wand", Damage = 5, CharacterId = 2 }
             );
 
-            modelBuilder.Entity<CharacterSkill>().HasData(
-                new CharacterSkill { CharacterId = 1, SkillId = 2 },
-                new CharacterSkill { CharacterId = 2, SkillId = 1 },
-                new CharacterSkill { CharacterId = 2, SkillId = 3 }
-            );
+            modelBuilder.SharedTypeEntity<Dictionary<string, object>>("CharacterSkill")
+                .HasData(
+                    new { CharactersId = 1, SkillsId = 2 },
+                    new { CharactersId = 2, SkillsId = 1 },
+                    new { CharactersId = 2, SkillsId = 3 });
         }
     }
 }
